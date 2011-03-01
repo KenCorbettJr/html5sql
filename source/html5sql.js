@@ -1,6 +1,17 @@
 /* ***** html5sql.js ******
  *
+ * Description: A helper javascript module for creating and working with
+ *     HTML5 Web Databases.
  *
+ * License: MIT license <http://www.opensource.org/licenses/mit-license.php>
+ *
+ * Authors: Ken Corbett Jr
+ *
+ * Version 0.9
+ *
+ * General Module Design based on article by Ben Cherry
+ * http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth
+ * 
  */
 
 var html5sql = (function () {

@@ -51,14 +51,14 @@ a separate file, which for this example we will name
 like this:
 
     CREATE TABLE example (id INTEGER PRIMARY KEY, data TEXT);
-    INSERT INTO example (label) VALUES ('First');
-    INSERT INTO example (label) VALUES ('Second');
-    INSERT INTO example (label) VALUES ('Third');
+    INSERT INTO example (data) VALUES ('First');
+    INSERT INTO example (data) VALUES ('Second');
+    INSERT INTO example (data) VALUES ('Third');
     
     CREATE TABLE example2 (id INTEGER PRIMARY KEY, data TEXT);
-    INSERT INTO example2 (label) VALUES ('First');
-    INSERT INTO example2 (label) VALUES ('Second');
-    INSERT INTO example2 (label) VALUES ('Third');
+    INSERT INTO example2 (data) VALUES ('First');
+    INSERT INTO example2 (data) VALUES ('Second');
+    INSERT INTO example2 (data) VALUES ('Third');
     
 With *html5sql*, to sequentially call these SQL statements and
 create your table(s) all you would need to do is open your
