@@ -73,9 +73,20 @@ var html5sql = (function () {
 			var i;
 			if (typeof sqlInput === "string") {
 				trim(sqlInput);
+				
+				//Separate sql statements by their ending semicolon
 				sqlInput = sqlInput.split(';');
+				
 				for(i = 1; i < sqlInput.length; i++){
+					//Ensure semicolons within quotes are replaced
+					while(sqlInput[i].split(/["]/gm).length % 2 === 0 ||
+						  sqlInput[i].split(/[']/gm).length % 2 === 0 ||
+						  sqlInput[i].split(/[`]/gm).length % 2 === 0){
+						 sqlInput.splice(i,2,sqlInput[i] + ";" + sqlInput[i+1]);
+					}
+					//Add back the semicolon at the end of the line
 					sqlInput[i] = trim(sqlInput[i]) + ';';
+					//Get rid of any empty statements
 					if(sqlInput[i] === ';'){
 						sqlInput.splice(i, 1);
 					}
