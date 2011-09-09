@@ -15,8 +15,8 @@
  */
 
 var html5sql = (function () {
-	
-	var readTransactionAvailible = false,
+    
+	var readTransactionAvailable = false,
 		doNothing = function () {},
 		emptyArray = [],
 		trim = function (string) {
@@ -27,7 +27,7 @@ var html5sql = (function () {
 		},
 		// transaction is an sql transaction, sqlObjects are properly formated
 		// and cleaned SQL objects
-		sqlProcessor = function (transaction, sqlObjects, finalSuccess, error) {
+		sqlProcessor = function (transaction, sqlObjects, finalSuccess, failure) {
 			
 			var sequenceNumber = 0,
 				dataForNextTransaction = null,
@@ -64,7 +64,7 @@ var html5sql = (function () {
 					if(html5sql.logErrors){
 						console.error("Error: " + error.message + " while processing: " + sqlObjects[sequenceNumber].sql);
 					}
-					error(error, sqlObjects[sequenceNumber].sql);
+					failure(error, sqlObjects[sequenceNumber].sql);
 				};
 			
 			runTransaction();
@@ -138,7 +138,7 @@ var html5sql = (function () {
 		logErrors: false,
 		openDatabase: function (name, displayname, size, whenOpen) {
 			html5sql.database = openDatabase(name, "", displayname, size);
-			readTransactionAvailible = typeof html5sql.database.readTransaction === 'function';
+			readTransactionAvailable = typeof html5sql.database.readTransaction === 'function';
 			if (whenOpen) {
 				whenOpen();
 			}
@@ -197,7 +197,7 @@ var html5sql = (function () {
 				
 				var sqlObjects = sqlObjectCreator(sqlInput);
 				
-				if (statementsAreSelectOnly(sqlObjects) && readTransactionAvailible) {
+				if (statementsAreSelectOnly(sqlObjects) && readTransactionAvailable) {
 					html5sql.database.readTransaction(function (transaction) {
 						sqlProcessor(transaction, sqlObjects, finalCallback, errorCallback);
 					});
