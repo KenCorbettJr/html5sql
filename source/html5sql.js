@@ -7,7 +7,7 @@
  *
  * Authors: Ken Corbett Jr
  *
- * Version 0.9
+ * Version 0.9.1
  *
  * General Module Design based on article by Ben Cherry
  * http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth
