@@ -1,5 +1,9 @@
 $(document).ready(function(){
-    
+    if(!html5sql.database){
+        html5sql.openDatabase("test", "Testing Database", 5*1024*1024);
+    }
+
+
     html5sql.logInfo = true;
     html5sql.logErrors = true;
     
@@ -25,49 +29,49 @@ $(document).ready(function(){
         html5sql.process(
             [
              {
-                "sql": "CREATE TABLE sequenceTest (sequence  INTEGER PRIMARY KEY, label TEXT);",
+                "sql": "CREATE TABLE Test (sequence  INTEGER PRIMARY KEY, label TEXT);",
                 "data": [],
                 "success": function(transaction, results){
                     ok(true, "Created sequence Testing Table")
                 }
              },
              {
-                "sql": "INSERT INTO sequenceTest (label) VALUES ('First');",
+                "sql": "INSERT INTO Test (label) VALUES ('First');",
                 "data": [],
                 "success": function(transaction, results){
                     equal(1, results.insertId, "Inserted first record in sequence.");
                 }
              },
              {
-                "sql": "INSERT INTO sequenceTest (label) VALUES ('Second');",
+                "sql": "INSERT INTO Test (label) VALUES ('Second');",
                 "data": [],
                 "success": function(transaction, results){
                     equal(2, results.insertId, "Inserted second record in sequence.");
                 }
              },
              {
-                "sql": "INSERT INTO sequenceTest (label) VALUES ('Third');",
+                "sql": "INSERT INTO Test (label) VALUES ('Third');",
                 "data": [],
                 "success": function(transaction, results){
                     equal(3, results.insertId, "Inserted third record in sequence.");
                 }
              },
              {
-                "sql": "INSERT INTO sequenceTest (label) VALUES ('Fourth');",
+                "sql": "INSERT INTO Test (label) VALUES ('Fourth');",
                 "data": [],
                 "success": function(transaction, results){
                     equal(4, results.insertId, "Inserted fourth record in sequence.");
                 }
              },
              {
-                "sql": "INSERT INTO sequenceTest (label) VALUES ('Fifth');",
+                "sql": "INSERT INTO Test (label) VALUES ('Fifth');",
                 "data": [],
                 "success": function(transaction, results){
                     equal(5, results.insertId, "Inserted fifth record in sequence.");
                 }
              },
              {
-                "sql": "DROP TABLE sequenceTest;",
+                "sql": "DROP TABLE Test;",
                 "data": [],
                 "success": function(transaction, results){
                     ok(true, "Droped Return Table after all records were inserted.")
@@ -78,8 +82,8 @@ $(document).ready(function(){
                 ok(true, "Final Callback Executed" );
                 start();
             },
-            function(){
-                throw new Error("Error Processing SQL");
+            function(error, problemSQLStatement){
+                throw new Error("Error:"+error.message+" Processing SQL Statement "+problemSQLStatement);
             }
         );
     });
@@ -90,7 +94,6 @@ $(document).ready(function(){
             [
              {
                 "sql": "CREATE TABLE returnTest (sequence  INTEGER PRIMARY KEY, label TEXT);",
-                "data": [],
                 "success": function(transaction, results){
                     ok(true, "Created sequence Testing Table")
                     return ["Five"];
@@ -98,7 +101,6 @@ $(document).ready(function(){
              },
              {
                 "sql": "INSERT INTO returnTest (label) VALUES (?);",
-                "data": [],
                 "success": function(transaction, results){
                     equal(1, results.insertId, "Inserted first record in sequence.");
                     return ["Four"];
@@ -106,7 +108,6 @@ $(document).ready(function(){
              },
              {
                 "sql": "INSERT INTO returnTest (label) VALUES (?);",
-                "data": [],
                 "success": function(transaction, results){
                     equal(2, results.insertId, "Inserted second record in sequence.");
                     return ["Three"];
@@ -114,7 +115,6 @@ $(document).ready(function(){
              },
              {
                 "sql": "INSERT INTO returnTest (label) VALUES (?);",
-                "data": [],
                 "success": function(transaction, results){
                     equal(3, results.insertId, "Inserted third record in sequence.");
                     return ["Two"];
@@ -122,7 +122,6 @@ $(document).ready(function(){
              },
              {
                 "sql": "INSERT INTO returnTest (label) VALUES (?);",
-                "data": [],
                 "success": function(transaction, results){
                     equal(4, results.insertId, "Inserted fourth record in sequence.");
                     return ["One"];
@@ -130,14 +129,12 @@ $(document).ready(function(){
              },
              {
                 "sql": "INSERT INTO returnTest (label) VALUES (?);",
-                "data": [],
                 "success": function(transaction, results){
-                    equal(results.insertId, 5, "Inserted fifth record in sequence.");
+                    equal(5, results.insertId, "Inserted fifth record in sequence.");
                 }
              },
              {
                 "sql": "SELECT * FROM returnTest;",
-                "data": [],
                 "success": function(transaction, results){
                     equal(results.rows.item(0).label, "Five");
                     equal(results.rows.item(1).label, "Four");
@@ -147,9 +144,8 @@ $(document).ready(function(){
                 }
              },
              {
-                "sql": "DROP TABLE returnTest;",
-                "data": [],
-                "success": function(transaction, results){
+                sql: "DROP TABLE returnTest;",
+                success: function(transaction, results){
                     ok(true, "Droped Sequence Table after all records were inserted.");
                 }
              }
@@ -158,8 +154,8 @@ $(document).ready(function(){
                 ok(true, "Final Callback Executed" );
                 start();
             },
-            function(){
-                throw new Error("Error Processing SQL");
+            function(error, problemSQLStatement){
+                throw new Error("Error:"+error.message+" Processing SQL Statement "+problemSQLStatement);
             }
         );  
     });
@@ -167,19 +163,19 @@ $(document).ready(function(){
     test("PROCESS: a set of sql statments in an array.", 1, function() {
         stop();
         html5sql.process(
-            ["CREATE TABLE sequenceTest2 (sequence  INTEGER PRIMARY KEY, label TEXT);",
-             "INSERT INTO sequenceTest2 (label) VALUES ('First');",
-             "INSERT INTO sequenceTest2 (label) VALUES ('Second');",
-             "INSERT INTO sequenceTest2 (label) VALUES ('Third');",
-             "INSERT INTO sequenceTest2 (label) VALUES ('Fourth');",
-             "INSERT INTO sequenceTest2 (label) VALUES ('Fifth');",
-             "DROP TABLE sequenceTest2;"],
+            ["CREATE TABLE Test2 (sequence  INTEGER PRIMARY KEY, label TEXT);",
+             "INSERT INTO Test2 (label) VALUES ('First');",
+             "INSERT INTO Test2 (label) VALUES ('Second');",
+             "INSERT INTO Test2 (label) VALUES ('Third');",
+             "INSERT INTO Test2 (label) VALUES ('Fourth');",
+             "INSERT INTO Test2 (label) VALUES ('Fifth');",
+             "DROP TABLE Test2;"],
             function(){
                 ok(true, "Final Callback Executed" );
                 start();
             },
-            function(){
-                throw new Error("Error Processing SQL");
+            function(error, problemSQLStatement){
+                throw new Error("Error:"+error.message+" Processing SQL Statement "+problemSQLStatement);
             }
         );
     });
@@ -187,23 +183,92 @@ $(document).ready(function(){
     test("PROCESS: a set of sql statments combined within a single string.", 1, function() {
         stop();
         html5sql.process(
-            "CREATE TABLE sequenceTest3 (sequence  INTEGER PRIMARY KEY, label TEXT);"+
-            "INSERT INTO sequenceTest3 (label) VALUES ('First');"+
-            "INSERT INTO sequenceTest3 (label) VALUES ('Second');"+
-            "INSERT INTO sequenceTest3 (label) VALUES ('Third');"+
-            "INSERT INTO sequenceTest3 (label) VALUES ('Fourth');"+
-            "INSERT INTO sequenceTest3 (label) VALUES ('Fifth');"+
-            "DROP TABLE sequenceTest3;",
+            "DROP TABLE IF EXISTS Test3;"+
+            "CREATE TABLE Test3 (sequence  INTEGER PRIMARY KEY, label TEXT);"+
+            "INSERT INTO Test3 (label) VALUES ('First');"+
+            "INSERT INTO Test3 (label) VALUES ('Second');"+
+            "INSERT INTO Test3 (label) VALUES ('Third');"+
+            "INSERT INTO Test3 (label) VALUES ('Fourth');"+
+            "INSERT INTO Test3 (label) VALUES ('Fifth');"+
+            "DROP TABLE Test3;",
             function(){
                 ok(true, "Final Callback Executed" );
                 start();
             },
-            function(){
-                throw new Error("Error Processing SQL");
+            function(error, problemSQLStatement){
+                throw new Error("Error:"+error.message+" Processing SQL Statement "+problemSQLStatement);
             }
         );
+
+
     });
-    
+
+    test("PROCESS: a single select statement with results forwarded to the final success callback function", 1, function(){
+        stop();
+        html5sql.process(
+            "DROP TABLE IF EXISTS Test3;"+
+            "CREATE TABLE Test4 (sequence  INTEGER PRIMARY KEY, label TEXT);"+
+            "INSERT INTO Test4 (label) VALUES ('First');"+
+            "INSERT INTO Test4 (label) VALUES ('Second');"+
+            "INSERT INTO Test4 (label) VALUES ('Third');"+
+            "INSERT INTO Test4 (label) VALUES ('Fourth');"+
+            "INSERT INTO Test4 (label) VALUES ('Fifth');",
+            function(){
+                resultsInFinalSuccess();
+            },
+            function(error, problemSQLStatement){
+                throw new Error("Error:"+error.message+" Processing SQL Statement "+problemSQLStatement);
+            }
+        );
+        var resultsInFinalSuccess = function(){
+            html5sql.process(
+                "SELECT * FROM Test4;",
+                function(transaction, results, rowArray){
+                    ok((!!transaction && !!results && !!rowArray), "Final Callback Executed Contains Results of the Select Statement");
+                    html5sql.process("DROP TABLE IF EXISTS Test4;");
+                    start();
+                },
+                function(error, problemSQLStatement){
+                    throw new Error("Error:"+error.message+" Processing SQL Statement "+problemSQLStatement);
+                }
+            );
+        }
+    });
+
+    test("PROCESS: turning off putSelectResultsInArray causes the rowArray parameter to be passed as null", 1, function(){
+        stop();
+        html5sql.putSelectResultsInArray = false;
+        html5sql.process(
+            "DROP TABLE IF EXISTS Test5;"+
+            "CREATE TABLE Test5 (sequence  INTEGER PRIMARY KEY, label TEXT);"+
+            "INSERT INTO Test5 (label) VALUES ('First');"+
+            "INSERT INTO Test5 (label) VALUES ('Second');"+
+            "INSERT INTO Test5 (label) VALUES ('Third');"+
+            "INSERT INTO Test5 (label) VALUES ('Fourth');"+
+            "INSERT INTO Test5 (label) VALUES ('Fifth');",
+            function(){
+                resultsInFinalSuccess();
+            },
+            function(error, problemSQLStatement){
+                throw new Error("Error:"+error.message+" Processing SQL Statement "+problemSQLStatement);
+            }
+        );
+        var resultsInFinalSuccess = function(){
+            html5sql.process(
+                "SELECT * FROM Test5;",
+                function(transaction, results, rowArray){
+                    ok((rowArray === null), "Final callbackback executed contains a populated rowArray");
+                    html5sql.putSelectResultsInArray = false;
+                    html5sql.process("DROP TABLE IF EXISTS Test5;");
+                    start();
+                },
+                function(error, problemSQLStatement){
+                    throw new Error("Error:"+error.message+" Processing SQL Statement "+problemSQLStatement);
+                }
+            );
+        }
+    });
+
     test("PROCESS: a set of sql statments stored in a separate file",1,function(){
         stop();
         
@@ -214,8 +279,8 @@ $(document).ready(function(){
                     ok(true, "Final Callback Executed");
                     start();
                 },
-                function(){
-                    throw new Error("Error Processing SQL");
+                function(error, problemSQLStatement){
+                    throw new Error("Error:"+error.message+" Processing SQL Statement "+problemSQLStatement);
                 }
             );
         });
@@ -234,29 +299,29 @@ $(document).ready(function(){
                     ok(true, "10000 SQL Statements Processed Sequentially in " + seconds + " seconds");
                     start();
                 },
-                function(){
-                    throw new Error("Error Processing SQL");
+                function(error, problemSQLStatement){
+                    throw new Error("Error:"+error.message+" Processing SQL Statement "+problemSQLStatement);
                 }
             );
         })
-    })
+    });
     
     test("CHANGE VERSION: when passed a set of sql statments in an array.", 1, function() {
         stop();
         html5sql.changeVersion(html5sql.database.version,"1.0",
-            ["CREATE TABLE sequenceTest2 (sequence  INTEGER PRIMARY KEY, label TEXT);",
-             "INSERT INTO sequenceTest2 (label) VALUES ('First');",
-             "INSERT INTO sequenceTest2 (label) VALUES ('Second');",
-             "INSERT INTO sequenceTest2 (label) VALUES ('Third');",
-             "INSERT INTO sequenceTest2 (label) VALUES ('Fourth');",
-             "INSERT INTO sequenceTest2 (label) VALUES ('Fifth');",
-             "DROP TABLE sequenceTest2;"],
+            ["CREATE TABLE Test7 (sequence  INTEGER PRIMARY KEY, label TEXT);",
+             "INSERT INTO Test7 (label) VALUES ('First');",
+             "INSERT INTO Test7 (label) VALUES ('Second');",
+             "INSERT INTO Test7 (label) VALUES ('Third');",
+             "INSERT INTO Test7 (label) VALUES ('Fourth');",
+             "INSERT INTO Test7 (label) VALUES ('Fifth');",
+             "DROP TABLE Test7;"],
             function(){
                 ok(true, "Final Callback Executed" );
                 start();
             },
-            function(){
-                throw new Error("Error Processing SQL");
+            function(error, problemSQLStatement){
+                throw new Error("Error:"+error.message+" Processing SQL Statement "+problemSQLStatement);
             }
         );
     });
@@ -264,20 +329,21 @@ $(document).ready(function(){
     test("CHANGE VERSION: when passed a set of sql statments combined within a single string.", 1, function() {
         stop();
         html5sql.changeVersion("1.0","",
-            "CREATE TABLE sequenceTest3 (sequence  INTEGER PRIMARY KEY, label TEXT);"+
-            "INSERT INTO sequenceTest3 (label) VALUES ('First');"+
-            "INSERT INTO sequenceTest3 (label) VALUES ('Second');"+
-            "INSERT INTO sequenceTest3 (label) VALUES ('Third');"+
-            "INSERT INTO sequenceTest3 (label) VALUES ('Fourth');"+
-            "INSERT INTO sequenceTest3 (label) VALUES ('Fifth');"+
-            "DROP TABLE sequenceTest3;",
+            "CREATE TABLE Test8 (sequence  INTEGER PRIMARY KEY, label TEXT);"+
+            "INSERT INTO Test8 (label) VALUES ('First');"+
+            "INSERT INTO Test8 (label) VALUES ('Second');"+
+            "INSERT INTO Test8 (label) VALUES ('Third');"+
+            "INSERT INTO Test8 (label) VALUES ('Fourth');"+
+            "INSERT INTO Test8 (label) VALUES ('Fifth');"+
+            "DROP TABLE Test8;",
             function(){
                 ok(true, "Final Callback Executed" );
                 start();
             },
-            function(){
-                throw new Error("Error Processing SQL");
+            function(error, problemSQLStatement){
+                throw new Error("Error:"+error.message+" Processing SQL Statement "+problemSQLStatement);
             }
         );
     });
+
 });

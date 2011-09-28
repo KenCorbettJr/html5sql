@@ -1,7 +1,7 @@
-CREATE TABLE sequenceTest4 (sequence  INTEGER PRIMARY KEY, label TEXT);
-INSERT INTO sequenceTest4 (label) VALUES ('First');
-INSERT INTO sequenceTest4 (label) VALUES ('Second');
-INSERT INTO sequenceTest4 (label) VALUES ('Third');
-INSERT INTO sequenceTest4 (label) VALUES ('Fourth');
-INSERT INTO sequenceTest4 (label) VALUES ('Fifth');
-DROP TABLE sequenceTest4;
+CREATE TABLE Test6 (sequence  INTEGER PRIMARY KEY, label TEXT);
+INSERT INTO Test6 (label) VALUES ('First');
+INSERT INTO Test6 (label) VALUES ('Second');
+INSERT INTO Test6 (label) VALUES ('Third');
+INSERT INTO Test6 (label) VALUES ('Fourth');
+INSERT INTO Test6 (label) VALUES ('Fifth');
+DROP TABLE Test6;
