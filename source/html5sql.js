@@ -5,9 +5,11 @@
  *
  * License: MIT license <http://www.opensource.org/licenses/mit-license.php>
  *
+ * Website: www.html5sql.com
+ * 
  * Authors: Ken Corbett Jr
  *
- * Version 0.9.2
+ * Version 0.9.3
  * 
  */
 
@@ -50,7 +52,7 @@ var html5sql = (function () {
 						console.log("Success processing: " + sqlObjects[sequenceNumber].sql);
 					}
 					
-					//Process the results of a select puting them in a much more manageable array form.
+					//Process the results of a select putting them in a much more manageable array form.
 					if(html5sql.putSelectResultsInArray && isSelectStmt(sqlObjects[sequenceNumber].sql)){
 						for(i = 0, max = results.rows.length; i < max; i++){
 							rowsArray[i] = results.rows.item(i);
@@ -79,7 +81,8 @@ var html5sql = (function () {
 				},
 				failureCallback = function (transaction, error) {
 					if(html5sql.logErrors){
-						console.error("Error: " + error.message + " while processing statment "+(sequenceNumber + 1)+": " + sqlObjects[sequenceNumber].sql);
+						console.error("Error: " + error.message +
+							 " while processing statment "+(sequenceNumber + 1)+": " + sqlObjects[sequenceNumber].sql);
 					}
 					failure(error, sqlObjects[sequenceNumber].sql);
 				};
@@ -95,7 +98,7 @@ var html5sql = (function () {
 				sqlInput = sqlInput.split(';');
 				
 				for(i = 1; i < sqlInput.length; i++){
-					//Ensure semicolons within quotes are replaced
+					//Ensure semicolons within quotes are put back in
 					while(sqlInput[i].split(/["]/gm).length % 2 === 0 ||
 						  sqlInput[i].split(/[']/gm).length % 2 === 0 ||
 						  sqlInput[i].split(/[`]/gm).length % 2 === 0){
@@ -108,6 +111,11 @@ var html5sql = (function () {
 						sqlInput.splice(i, 1);
 					}
 				}
+			}
+			if(isArray(sqlInput) === false){
+				// At this point the user has most likely passed in a sql object
+				// We put it into an array so it will fit the normal format
+				sqlInput = [sqlInput];
 			}
 			for (i = 0; i < sqlInput.length; i++) {
 				//If the array item is only a string format it into an sql object
@@ -139,7 +147,7 @@ var html5sql = (function () {
 		// Returns true if all SQL statement objects are SELECT statements.
 			var i = 0;
 				
-			//Loop over SQL objects ensuring they are select statments
+			//Loop over SQL objects ensuring they are select statements
 			do {
 				//If the sql string is not a select statement return false
 				if (!isSelectStmt(SQLObjects[i].sql)) {
@@ -148,7 +156,7 @@ var html5sql = (function () {
 				i++;
 			} while (i < SQLObjects.length);
 		
-			//If all the statments happen to be select statments return true
+			//If all the statements happen to be select statements return true
 			return true;
 		};
 	return {
@@ -169,48 +177,45 @@ var html5sql = (function () {
 		/*
 		 *
 		 *	Arguments:
-		 *	
-		 *  sql = [array SQLObjects] ~ collection of SQL statement objects
+		 *  1. sql =                             ~ there are four ways to pass sql
+		 *                                         statements to html5sql.js
+		 *     a. {object SQLStatementObject}    ~ a single sql statement object
+         *           or
+		 *     b. [array SQLStatementObject(s)]  ~ a collection of SQL statement objects
 		 *           or
-		 *        [array SQLStrings] ~ collection of SQL statement strings
-		 *           or
-		 *        "SQLstring"        ~ SQL string to be split at the ';'
-		 *                             character and processed sequentially
+		 *     c. "string SQL Statement(s)"      ~ a SQL string to be split into individual
+		 *                                         statements at the ';' character
+         *           or
+		 *     d. [array SQl Statement(s)]       ~ a collection of SQL strings
          *
-		 *  finalSuccessCallback = (function) ~ called after all sql statments have
-		 *                               		been processed.  Optional.
+		 *  2. finalSuccessCallback = (function) ~ called after all sql statements have
+		 *                                         been processed.  Optional.
 		 * 
-		 *  failureCallback = (function) ~ called if any of the sql statements
-		 *                                 fails.  A default one is used if none
-		 *                                 is provided.
-		 *                             
-		 *                               
-		 *	SQL statement object:
+		 *  3. failureCallback =      (function) ~ called if any of the sql statements
+		 *                                         fails.  A default one is used if none
+		 *                                         is provided.  Optional.
+		 *
+		 *	SQLStatementObject:
 		 *	{
-		 *	 sql: "string",      !Required! ~ Your sql as a string
-		 *	 data: [array],       Optional  ~ The array of data to be sequentially
-		 *	                                  inserted into your sql at the ?
-		 *   success: (function), Optional  ~ A function to be called if this
-		 *                                    individual sql statment succeeds.
-		 *                                    If an array is returned it is used as
-		 *                                    the data for the next sql statement
-		 *                                    processed.
+		 *	 sql: "string",       !Required!  ~ Your sql as a string
+		 *	 data: [array],        Optional   ~ The array of data to be sequentially
+		 *	                                    inserted into your sql at the ?
+		 *   success: (function),  Optional   ~ A function to be called if this
+		 *                                      individual sql statement succeeds
+		 *   failure: (function),  Optional   ~ A function to be called if this
+		 *                                      individual sql statement fails
 		 *  }
 		 *
 		 *	Usage:
 		 *	html5sql.process(
-		 *		[{
-		 *		   sql: "SELECT * FROM table;",
+		 *		{
+		 *		   sql: "UPDATE users SET ...",
 		 *		   data: [],
-		 *		   success: function(){}
-		 *		 },
-		 *		 {
-		 *		   sql: "SELECT * FROM table;",
-		 *		   data: [],
-		 *		   success: function(){}
-		 *		 }],
-		 *		function(){},
-		 *		function(){}
+		 *		   success: function(){},
+		 *		   failure: function(){}
+		 *		},
+		 *		function(){}, // finalSuccessCallback
+		 *		function(){}  // failureCallback
 		 *	);
 		 *	
 		 */
@@ -247,55 +252,59 @@ var html5sql = (function () {
 		changeVersion: function (oldVersion, newVersion, sqlInput, finalSuccessCallback, failureCallback) {
 		/* This is the same as html5sql.process but used when you want to change the
 		 * version of your database.  If the database version matches the oldVersion
-		 * passed to the function the statements passed to the funciton are
+		 * passed to the function the statements passed to the function are
 		 * processed and the version of the database is changed to the new version.
 		 *
 		 *	Arguments:
-		 *	oldVersion = "String"             ~ the old version to upgrade
-		 *	newVersion = "String"             ~ the new version after the upgrade
-		 *  sql = [array SQLObjects] ~ collection of SQL statement objects
+		 *	1. oldVersion = "String"             ~ the old version to upgrade
+		 *	2. newVersion = "String"             ~ the new version after the upgrade
+		 *  3. sql =                             ~ there are four ways to pass sql
+		 *                                         statements to html5sql.js
+		 *     a. {object SQLStatementObject}    ~ a single sql statement object
+         *           or
+		 *     b. [array SQLStatementObject(s)]  ~ a collection of SQL statement objects
 		 *           or
-		 *        [array SQLStrings] ~ collection of SQL statement strings
-		 *           or
-		 *        "SQLstring"        ~ SQL string to be split at the ';'
-		 *                             character and processed sequentially
-         *
-		 *  finalSuccessCallback = (function) ~ called after all sql statments have
-		 *                               		been processed.  Optional.
+		 *     c. "string SQL Statement(s)"      ~ a SQL string to be split into individual
+		 *                                         statements at the ';' character
+         *           or
+		 *     d. [array SQl Statement(s)]       ~ a collection of SQL strings
+		 *           
+		 *  4. finalSuccessCallback = (function) ~ called after all sql statements have
+		 *                                         been processed.  Optional.
 		 * 
-		 *  failureCallback = (function) ~ called if any of the sql statements
-		 *                                 fails.  A default one is used if none
-		 *                                 is provided.
+		 *  5. failureCallback =      (function) ~ called if any of the sql statements
+		 *                                         fails.  A default one is used if none
+		 *                                         is provided.  Optional.
 		 *
-		 *	SQL statement object:
+		 *	SQLStatementObject:
 		 *	{
-		 *	 sql: "string",      !Required! ~ Your sql as a string
-		 *	 data: [array],       Optional  ~ The array of data to be sequentially
-		 *	                                  inserted into your sql at the ?
-		 *   success: (function), Optional  ~ A function to be called if this
-		 *                                    individual sql statment succeeds
-		 *   failure: (function), Optional  ~ A function to be called if this
-		 *                                    individual sql statement fails
+		 *	 sql: "string",       !Required!  ~ Your sql as a string
+		 *	 data: [array],        Optional   ~ The array of data to be sequentially
+		 *	                                    inserted into your sql at the ?
+		 *   success: (function),  Optional   ~ A function to be called if this
+		 *                                      individual sql statement succeeds
+		 *   failure: (function),  Optional   ~ A function to be called if this
+		 *                                      individual sql statement fails
 		 *  }
 		 *
 		 *	Usage:
 		 *	html5sql.changeVersion(
-		 *	    "1.0",
-		 *	    "2.0",
-		 *		[{
-		 *		   sql: "SELECT * FROM table;",
+		 *	    "1.0",                             // oldVersion
+		 *	    "2.0",                             // newVersion
+		 *		[{                                 // sql
+		 *		   sql: "ALTER TABLE users ...",
 		 *		   data: [],
 		 *		   success: function(){},
 		 *		   failure: function(){}
 		 *		 },
 		 *		 {
-		 *		   sql: "SELECT * FROM table;",
+		 *		   sql: "UPDATE users ...",
 		 *		   data: [],
 		 *		   success: function(){},
 		 *		   failure: function(){}
 		 *		 }],
-		 *		function(){},
-		 *		function(){}
+		 *		function(){},                      // finalSuccessCallback
+		 *		function(){}                       // failureCallback
 		 *	);
 		 *	
 		 */

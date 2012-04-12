@@ -24,7 +24,27 @@ $(document).ready(function(){
         ok(html5sql.database, "Database was successfully created by calling html5sql.openDatabase with thie correct parameters");
     });
     
-    test("PROCESS: a set of sql statement objects.", 8, function() {
+    test("PROCESS: a single sql statement object.", 2, function() {
+        stop();
+        html5sql.process(
+            {
+                "sql": "CREATE TABLE singleObjectTest (sequence INTEGER PRIMARY KEY, label TEXT);",
+                "data": [],
+                "success": function(transaction, results){
+                    ok(true, "Created sequence Testing Table")
+                }
+            },
+            function(){
+                ok(true, "Final Callback Executed" );
+                start();
+            },
+            function(error, problemSQLStatement){
+                throw new Error("Error:"+error.message+" Processing SQL Statement "+problemSQLStatement);
+            }
+        );
+    });
+
+    test("PROCESS: a collection of sql statement objects.", 8, function() {
         stop();
         html5sql.process(
             [
