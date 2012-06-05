@@ -9,7 +9,7 @@
  * 
  * Authors: Ken Corbett Jr
  *
- * Version 0.9.3
+ * Version 0.9.4
  * 
  */
 
@@ -17,7 +17,6 @@ var html5sql = (function () {
 	
 	var readTransactionAvailable = false,
 		doNothing = function () {},
-		emptyArray = [],
 		trim = function (string) {
 			return string.replace(/^\s+/, "").replace(/\s+$/, "");
 		},
@@ -25,25 +24,23 @@ var html5sql = (function () {
 			return Object.prototype.toString.call(obj) === '[object Array]'; 
 		},
 		isUndefined = function(obj) { // From Underscore.js
-		    return obj === void 0;
+            return obj === void 0;
 		},
 		SelectStmtMatch = new RegExp('^select\\s', 'i'),
-	    isSelectStmt = function (sqlstring) {
+        isSelectStmt = function (sqlstring) {
 			return SelectStmtMatch.test(sqlstring);
 		},
-		doNothing = function(){},
 		// transaction is an sql transaction, sqlObjects are properly formated
 		// and cleaned SQL objects
 		sqlProcessor = function (transaction, sqlObjects, finalSuccess, failure) {
 			
 			var sequenceNumber = 0,
 				dataForNextTransaction = null,
-				currentSqlObject = null,
 				runTransaction = function () {
 					transaction.executeSql(sqlObjects[sequenceNumber].sql,
-										   sqlObjects[sequenceNumber].data,
-										   successCallback,
-										   failureCallback);
+                                           sqlObjects[sequenceNumber].data,
+                                           successCallback,
+                                           failureCallback);
 				},
 				successCallback = function (transaction, results) {
 					var i, max, rowsArray = [];
@@ -81,8 +78,8 @@ var html5sql = (function () {
 				},
 				failureCallback = function (transaction, error) {
 					if(html5sql.logErrors){
-						console.error("Error: " + error.message +
-							 " while processing statment "+(sequenceNumber + 1)+": " + sqlObjects[sequenceNumber].sql);
+						console.error("Error: " + error.message + 
+                                " while processing statment " + (sequenceNumber + 1)+": " + sqlObjects[sequenceNumber].sql);
 					}
 					failure(error, sqlObjects[sequenceNumber].sql);
 				};
@@ -100,9 +97,9 @@ var html5sql = (function () {
 				for(i = 1; i < sqlInput.length; i++){
 					//Ensure semicolons within quotes are put back in
 					while(sqlInput[i].split(/["]/gm).length % 2 === 0 ||
-						  sqlInput[i].split(/[']/gm).length % 2 === 0 ||
-						  sqlInput[i].split(/[`]/gm).length % 2 === 0){
-						 sqlInput.splice(i,2,sqlInput[i] + ";" + sqlInput[i+1]);
+                          sqlInput[i].split(/[']/gm).length % 2 === 0 ||
+                          sqlInput[i].split(/[`]/gm).length % 2 === 0){
+                        sqlInput.splice(i,2,sqlInput[i] + ";" + sqlInput[i+1]);
 					}
 					//Add back the semicolon at the end of the line
 					sqlInput[i] = trim(sqlInput[i]) + ';';
@@ -134,9 +131,9 @@ var html5sql = (function () {
 					}
 					// Check to see that the sql object is formated correctly.
 					if (typeof sqlInput[i]         !== "object"   ||
-					    typeof sqlInput[i].sql     !== "string"   ||
-					    typeof sqlInput[i].success !== "function" ||
-						!$.isArray(sqlInput[i].data)) {
+                        typeof sqlInput[i].sql     !== "string"   ||
+                        typeof sqlInput[i].success !== "function" ||
+                        !$.isArray(sqlInput[i].data)) {
 						throw new Error("Malformed sql object: "+sqlInput[i]);
 					}
 				}
