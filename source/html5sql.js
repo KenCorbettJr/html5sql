@@ -8,7 +8,7 @@
  *
  * Authors: Ken Corbett Jr
  *
- * Version 0.9.6
+ * Version 0.9.7
  */
 
 var html5sql = (function () {
@@ -234,35 +234,35 @@ var html5sql = (function () {
      *
      */
     html5sql.process = function (sqlInput, finalSuccessCallback, failureCallback) {
-            if (html5sql.database) {
+        if (html5sql.database) {
 
-                var sqlObjects = sqlObjectCreator(sqlInput);
+            var sqlObjects = sqlObjectCreator(sqlInput);
 
-                if(isUndefined(finalSuccessCallback)){
-                    finalSuccessCallback = doNothing;
-                }
-
-                if(isUndefined(failureCallback)){
-                    failureCallback = html5sql.defaultFailureCallback;
-                }
-
-                if (allStatementsAreSelectOnly(sqlObjects) && readTransactionAvailable) {
-                    html5sql.database.readTransaction(function (transaction) {
-                        sqlProcessor(transaction, sqlObjects, finalSuccessCallback, failureCallback);
-                    });
-                } else {
-                    html5sql.database.transaction(function (transaction) {
-                        sqlProcessor(transaction, sqlObjects, finalSuccessCallback, failureCallback);
-                    });
-                }
-            } else {
-                // Database hasn't been opened.
-                if(html5sql.logErrors){
-                    console.error("Error: Database needs to be opened before sql can be processed.");
-                }
-                return false;
+            if(isUndefined(finalSuccessCallback)){
+                finalSuccessCallback = doNothing;
             }
-        },
+
+            if(isUndefined(failureCallback)){
+                failureCallback = html5sql.defaultFailureCallback;
+            }
+
+            if (allStatementsAreSelectOnly(sqlObjects) && readTransactionAvailable) {
+                html5sql.database.readTransaction(function (transaction) {
+                    sqlProcessor(transaction, sqlObjects, finalSuccessCallback, failureCallback);
+                }, failureCallback);
+            } else {
+                html5sql.database.transaction(function (transaction) {
+                    sqlProcessor(transaction, sqlObjects, finalSuccessCallback, failureCallback);
+                }, failureCallback);
+            }
+        } else {
+            // Database hasn't been opened.
+            if(html5sql.logErrors){
+                console.error("Error: Database needs to be opened before sql can be processed.");
+            }
+            return false;
+        }
+    };
 
     /* This is the same as html5sql.process but used when you want to change the
      * version of your database.  If the database version matches the oldVersion
@@ -337,7 +337,7 @@ var html5sql = (function () {
 
                 html5sql.database.changeVersion(oldVersion, newVersion, function (transaction) {
                     sqlProcessor(transaction, sqlObjects, finalSuccessCallback, failureCallback);
-                });
+                }, failureCallback);
             }
         } else {
             // Database hasn't been opened.
@@ -346,8 +346,7 @@ var html5sql = (function () {
             }
             return false;
         }
-
-    }
+    };
 
     return html5sql;
 })();

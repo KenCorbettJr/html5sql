@@ -1,6 +1,6 @@
 {
   "name": "html5sql",
-  "version": "0.9.6",
+  "version": "0.9.7",
   "description": "makes working with the HTML5 Web Database much easier",
   "main": "source/html5sql.js",
   "scripts": {

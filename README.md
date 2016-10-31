@@ -2,7 +2,7 @@
 
 html5sql
 ===============
-v0.9.5
+v0.9.7
 
 *Makes using SQL on the client side is easy!*
 
