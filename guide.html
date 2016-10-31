@@ -3,44 +3,44 @@
 <html>
 <head>
     <title>html5sql.js Home Page</title>
-    
+
     <!--blueprint css-->
-    <link rel="stylesheet" href="blueprint/screen.css" type="text/css"  
-        media="screen, projection" /> 
-    <link rel="stylesheet" href="blueprint/print.css" type="text/css"  
-        media="print" /> 
-    <!--[if lt IE 8]> 
-    <link rel="stylesheet" href="blueprint/ie.css" type="text/css" 
-        media="screen, projection" /> 
+    <link rel="stylesheet" href="blueprint/screen.css" type="text/css"
+        media="screen, projection" />
+    <link rel="stylesheet" href="blueprint/print.css" type="text/css"
+        media="print" />
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="blueprint/ie.css" type="text/css"
+        media="screen, projection" />
     <![endif]-->
-    
+
     <link href='http://fonts.googleapis.com/css?family=Coda:800' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Podkova' rel='stylesheet' type='text/css'>
-    
-    
+
+
     <link rel="stylesheet" href="css/sunburst.css">
     <script src="js/highlight.pack.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    
+
     <link href='css/styles.css' rel='stylesheet' type='text/css'>
 </head>
 
 <body>
     <div id="header">
-	<h1><img id="storageIcon" src="images/HTML5_Offline_Storage.png"/>HTML5SQL.JS</h1>
-	<h5><em>Makes using SQL on the client side is easy!</em></h5>
+    <h1><img id="storageIcon" src="images/HTML5_Offline_Storage.png"/>HTML5SQL.JS</h1>
+    <h5><em>Makes using SQL on the client side is easy!</em></h5>
     </div>
     <div class="container">
         <div class="span-24">
             <h2>
                 <a href="index.html">Home</a>|
                 <a href="demo.html">Demo</a>|
-                <a href="js/html5sql.js">Download</a>|
+                <a href="https://raw.githubusercontent.com/KenCorbettJr/html5sql/master/source/html5sql.js">Download</a>|
                 <a href="#">Guide</a>
             </h2>
         </div>
     </div>
-    <div class="container"> 
+    <div class="container">
         <div class="span-24">
 
 <h3>General Guide for Using</h3>
@@ -108,11 +108,11 @@ SQL statement in a string like this:</p>
 as each of them ends in a semicolon like this:</p>
 
 <pre><code class="javascript">"CREATE table (id INTEGER PRIMARY KEY, data TEXT);" +
-"INSERT INTO table (data) VALUES ('One');" + 
-"INSERT INTO table (data) VALUES ('Two');" + 
-"INSERT INTO table (data) VALUES ('Three');" + 
-"INSERT INTO table (data) VALUES ('Four');" + 
-"INSERT INTO table (data) VALUES ('Five');" 
+"INSERT INTO table (data) VALUES ('One');" +
+"INSERT INTO table (data) VALUES ('Two');" +
+"INSERT INTO table (data) VALUES ('Three');" +
+"INSERT INTO table (data) VALUES ('Four');" +
+"INSERT INTO table (data) VALUES ('Five');"
 </code></pre>
 </li>
 <li><p><strong>Text from Separate File</strong> - In much the same way
@@ -127,10 +127,10 @@ is shown above.</p></li>
 
 <pre><code class="javascript"> [
      "CREATE table (id INTEGER PRIMARY KEY, data TEXT);",
-     "INSERT INTO table (data) VALUES ('One');", 
-     "INSERT INTO table (data) VALUES ('Two');", 
-     "INSERT INTO table (data) VALUES ('Three');", 
-     "INSERT INTO table (data) VALUES ('Four');", 
+     "INSERT INTO table (data) VALUES ('One');",
+     "INSERT INTO table (data) VALUES ('Two');",
+     "INSERT INTO table (data) VALUES ('Three');",
+     "INSERT INTO table (data) VALUES ('Four');",
      "INSERT INTO table (data) VALUES ('Five');"
  ]
 </code></pre>
@@ -168,7 +168,7 @@ statements as is commonly needed for foreign keys.</li>
    "sql": "",
    "data": [],
    "success": function(transaction, results){
-	//Code to be processed when sql statement has been processed
+    //Code to be processed when sql statement has been processed
    }
 }</code></pre>
 
@@ -180,8 +180,8 @@ statements as is commonly needed for foreign keys.</li>
      "sql": "INSERT INTO contacts (name, phone) VALUES (?, ?)",
      "data": ["Joe Bob", "555-555-5555"],
      "success": function(transaction, results){
-         //Just Added Bob to contacts table   
-     },  
+         //Just Added Bob to contacts table
+     },
    },
    {
      "sql": "INSERT INTO contacts (name, phone) VALUES (?, ?)",
@@ -229,7 +229,7 @@ statements as is commonly needed for foreign keys.</li>
      },
      function(error, statement){
          console.error("Error: " + error.message + " when processing " + statement);
-     }        
+     }
  );
 </code></pre>
 
@@ -263,7 +263,7 @@ statements as is commonly needed for foreign keys.</li>
  not changed.</li>
 </ul>
 </div></div>
-  </div> 
+  </div>
 </div>
 <script src="http://yandex.st/highlightjs/6.0/highlight.min.js"></script>
 </body>
