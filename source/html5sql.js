@@ -6,22 +6,22 @@
  * License: MIT license <http://www.opensource.org/licenses/mit-license.php>
  *
  * Website: www.html5sql.com
- * 
+ *
  * Authors: Ken Corbett Jr
  *
- * Version 0.9.4
- * 
+ * Version 0.9.5
+ *
  */
 
 var html5sql = (function () {
-	
+
 	var readTransactionAvailable = false,
 		doNothing = function () {},
 		trim = function (string) {
 			return string.replace(/^\s+/, "").replace(/\s+$/, "");
 		},
 		isArray = function (obj) { // From Underscore.js
-			return Object.prototype.toString.call(obj) === '[object Array]'; 
+			return Object.prototype.toString.call(obj) === '[object Array]';
 		},
 		isUndefined = function(obj) { // From Underscore.js
             return obj === void 0;
@@ -33,7 +33,7 @@ var html5sql = (function () {
 		// transaction is an sql transaction, sqlObjects are properly formated
 		// and cleaned SQL objects
 		sqlProcessor = function (transaction, sqlObjects, finalSuccess, failure) {
-			
+
 			var sequenceNumber = 0,
 				dataForNextTransaction = null,
 				runTransaction = function () {
@@ -48,7 +48,7 @@ var html5sql = (function () {
 					if(html5sql.logInfo){
 						console.log("Success processing: " + sqlObjects[sequenceNumber].sql);
 					}
-					
+
 					//Process the results of a select putting them in a much more manageable array form.
 					if(html5sql.putSelectResultsInArray && isSelectStmt(sqlObjects[sequenceNumber].sql)){
 						for(i = 0, max = results.rows.length; i < max; i++){
@@ -69,7 +69,7 @@ var html5sql = (function () {
 					} else {
 						dataForNextTransaction = null;
 					}
-					
+
 					if (sqlObjects.length > sequenceNumber) {
 						runTransaction();
 					} else {
@@ -78,22 +78,22 @@ var html5sql = (function () {
 				},
 				failureCallback = function (transaction, error) {
 					if(html5sql.logErrors){
-						console.error("Error: " + error.message + 
+						console.error("Error: " + error.message +
                                 " while processing statment " + (sequenceNumber + 1)+": " + sqlObjects[sequenceNumber].sql);
 					}
 					failure(error, sqlObjects[sequenceNumber].sql);
 				};
-			
+
 			runTransaction();
 		},
 		sqlObjectCreator = function (sqlInput) {
 			var i;
 			if (typeof sqlInput === "string") {
 				trim(sqlInput);
-				
+
 				//Separate sql statements by their ending semicolon
 				sqlInput = sqlInput.split(';');
-				
+
 				for(i = 1; i < sqlInput.length; i++){
 					//Ensure semicolons within quotes are put back in
 					while(sqlInput[i].split(/["]/gm).length % 2 === 0 ||
@@ -143,7 +143,7 @@ var html5sql = (function () {
 		statementsAreSelectOnly = function (SQLObjects) {
 		// Returns true if all SQL statement objects are SELECT statements.
 			var i = 0;
-				
+
 			//Loop over SQL objects ensuring they are select statements
 			do {
 				//If the sql string is not a select statement return false
@@ -152,7 +152,7 @@ var html5sql = (function () {
 				}
 				i++;
 			} while (i < SQLObjects.length);
-		
+
 			//If all the statements happen to be select statements return true
 			return true;
 		};
@@ -169,7 +169,7 @@ var html5sql = (function () {
 				whenOpen();
 			}
 		},
-		
+
 		process: function (sqlInput, finalSuccessCallback, failureCallback) {
 		/*
 		 *
@@ -187,7 +187,7 @@ var html5sql = (function () {
          *
 		 *  2. finalSuccessCallback = (function) ~ called after all sql statements have
 		 *                                         been processed.  Optional.
-		 * 
+		 *
 		 *  3. failureCallback =      (function) ~ called if any of the sql statements
 		 *                                         fails.  A default one is used if none
 		 *                                         is provided.  Optional.
@@ -214,10 +214,10 @@ var html5sql = (function () {
 		 *		function(){}, // finalSuccessCallback
 		 *		function(){}  // failureCallback
 		 *	);
-		 *	
+		 *
 		 */
 			if (html5sql.database) {
-				
+
 				var sqlObjects = sqlObjectCreator(sqlInput);
 
 				if(isUndefined(finalSuccessCallback)){
@@ -245,7 +245,7 @@ var html5sql = (function () {
 				return false;
 			}
 		},
-	
+
 		changeVersion: function (oldVersion, newVersion, sqlInput, finalSuccessCallback, failureCallback) {
 		/* This is the same as html5sql.process but used when you want to change the
 		 * version of your database.  If the database version matches the oldVersion
@@ -265,10 +265,10 @@ var html5sql = (function () {
 		 *                                         statements at the ';' character
          *           or
 		 *     d. [array SQl Statement(s)]       ~ a collection of SQL strings
-		 *           
+		 *
 		 *  4. finalSuccessCallback = (function) ~ called after all sql statements have
 		 *                                         been processed.  Optional.
-		 * 
+		 *
 		 *  5. failureCallback =      (function) ~ called if any of the sql statements
 		 *                                         fails.  A default one is used if none
 		 *                                         is provided.  Optional.
@@ -303,12 +303,12 @@ var html5sql = (function () {
 		 *		function(){},                      // finalSuccessCallback
 		 *		function(){}                       // failureCallback
 		 *	);
-		 *	
+		 *
 		 */
 			if (html5sql.database) {
 				if(html5sql.database.version === oldVersion){
 					var sqlObjects = sqlObjectCreator(sqlInput);
-				
+
 					if(isUndefined(finalSuccessCallback)){
 					finalSuccessCallback = doNothing;
 					}
@@ -324,12 +324,12 @@ var html5sql = (function () {
 			} else {
 				// Database hasn't been opened.
 				if(html5sql.logErrors){
-					console.log("Error: Database needs to be opened before sql can be processed.");	
+					console.log("Error: Database needs to be opened before sql can be processed.");
 				}
 				return false;
 			}
-		
+
 		}
 	};
-	
+
 })();
