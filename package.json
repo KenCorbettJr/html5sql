@@ -1,0 +1,19 @@
+{
+  "name": "html5sql",
+  "version": "0.9.4",
+  "description": "makes working with the HTML5 Web Database much easier",
+  "main": "source/html5sql.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KenCorbettJr/html5sql.git"
+  },
+  "author": "Ken Corbett Jr",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/KenCorbettJr/html5sql/issues"
+  },
+  "homepage": "http://kencorbettjr.github.io/html5sql/"
+}
