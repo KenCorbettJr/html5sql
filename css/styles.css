@@ -1,0 +1,182 @@
+body {
+	background: #222;
+	color: #bbb;
+	font-family: 'Podkova', arial, serif;
+	font-size: 1.3em;
+	overflow-x: hidden;
+	text-align: center;
+}
+
+code {
+	font-size: .7em;
+}
+
+strong {
+	color: #ddd;
+}
+
+#header {
+	display: block;
+	margin: 100px auto 0;
+	position: relative;
+	width: 750px;
+}
+
+h1 {
+	color: #fff;
+	font-family: 'Coda', arial, serif !important;
+	font-size: 80px;
+	margin-bottom: 0px;
+	text-shadow: #fff 0px 0px 8px;
+}
+
+#storageIcon {
+	float: left;
+	margin-top: -19px;
+	padding-right: 20px;
+}
+
+h5 {
+	color: #888;
+	font-size: 24px;	
+}
+
+
+.container{
+	text-align: left;
+}
+
+h2 {
+	background-color: #D94625;
+	border-color: #F2622E;
+	border-style: solid;
+	border-width: 5px 0;
+	color: #eee;
+	padding: 4px;
+	position: relative;
+}
+
+h2 a {
+	color: #eee;
+	text-decoration: none;
+	padding: 0 10px 0 2px;
+	-webkit-transition: all 250ms ease-in-out;
+}
+h2 a:hover {
+	color: #fff;
+	text-decoration: none;
+	padding: 0 10px 0 2px;
+	text-shadow: white 0px 0px 5px;
+	-webkit-transition: all 250ms ease-in-out;
+}
+
+h2:before, h2:after {
+	background: #D94625;  /* Match the background */
+	border-color: #F2622E;
+	border-style: solid;
+	border-width: 5px 0;
+	bottom: -5px;
+	content: "";
+	position: absolute;
+	top: -5px;
+	width: 9999px;   /* some huge width */
+}
+h2:before {
+	right: 100%;
+}
+h2:after {
+	left: 100%;
+}
+
+h3 {
+	background-color: #737373;
+	border-color: #737373;
+	border-style: solid;
+	border-width: 5px 0;
+	color: white;
+	padding: 4px;
+	position: relative;
+}
+
+
+h3:before, h3:after {
+	background: #737373;  /* Match the background */
+	border-color: #737373;
+	border-style: solid;
+	border-width: 5px 0;
+	bottom: -5px;
+	content: "";
+	position: absolute;
+	top: -5px;
+	width: 9999px;   /* some huge width */
+}
+h3:before {
+	right: 100%;
+}
+h3:after {
+	left: 100%;
+}
+
+
+h4 {
+	background-color: #454545;
+	border-color: #454545;
+	border-style: solid;
+	border-width: 2px 0;
+	color: white;
+	font-size: 27px;
+	padding: 4px;
+	position: relative;
+}
+
+
+h4:before, h4:after {
+	background: #454545;  /* Match the background */
+	border-color: #454545;
+	border-style: solid;
+	border-width: 2px 0;
+	bottom: -2px;
+	content: "";
+	position: absolute;
+	top: -2px;
+	width: 9999px;   /* some huge width */
+}
+h4:before {
+	right: 100%;
+}
+h4:after {
+	left: 100%;
+}
+
+#startTest {
+	background: #ccc;
+	border-radius: 5px;
+	box-shadow: 5px 5px 8px #000;
+	color: #222;
+	color: #F2622E;
+	font-family: 'Coda', arial, serif !important;
+	margin: 40px auto;
+	padding: 8px 8px 3px;
+	text-align: center;
+	width: 250px;
+}
+
+#startTest:hover,
+#startTest.running{
+	box-shadow: inset 1px 1px 2px #555;
+	color: #F2622E;
+	text-shadow: 1px 1px 2px #222;
+}
+
+#demoRunning {
+	display: none;
+	text-align: center;
+}
+
+#results {
+	font-size: 2em;
+	text-align: center;
+}
+
+
+

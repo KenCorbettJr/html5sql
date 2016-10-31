@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>html5sql.js Home Page</title>
+    
+    <!--blueprint css-->
+    <link rel="stylesheet" href="blueprint/screen.css" type="text/css"  
+        media="screen, projection" /> 
+    <link rel="stylesheet" href="blueprint/print.css" type="text/css"  
+        media="print" /> 
+    <!--[if lt IE 8]> 
+    <link rel="stylesheet" href="blueprint/ie.css" type="text/css" 
+        media="screen, projection" /> 
+    <![endif]-->
+    
+    <link href='http://fonts.googleapis.com/css?family=Coda:800' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Podkova' rel='stylesheet' type='text/css'>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" ></script>
+    <script src="js/modernizr.js"></script>
+    <script>
+	Modernizr.load({
+	    test: Modernizr.websqldatabase,
+	    yep : 'js/runDemo.js'
+	});
+    </script>
+    <script src="js/html5sql.js"></script>
+    <script type="text/javascript">
+        
+    </script>
+    
+    <link rel="stylesheet" href="css/sunburst.css">
+    <script src="js/highlight.pack.js" type="text/javascript"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <link href='css/styles.css' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+    <div id="header">
+	<h1><img id="storageIcon" src="images/HTML5_Offline_Storage.png"/>HTML5SQL.JS</h1>
+	<h5><em>Makes using SQL on the client side is easy!</em></h5>
+    </div>
+    <div class="container">
+        <div class="span-24">
+            <h2>
+                <a href="index.html">Home</a>|
+                <a href="#">Demo</a>|
+                <a href="js/html5sql.js">Download</a>|
+                <a href="guide.html">Guide</a>
+            </h2>
+        </div>
+    </div>
+    <div class="container appendBottom"> 
+        <div class="span-24">
+
+        <h3>Performance Demonstration</h3>
+        
+        <p>As a demonstration of the speed and power of the HTML5 Web Database
+        and the efficiency of the html5sql.js JavaScript library, I have created
+        this little demonstration.  Clicking the button below will cause the
+        html5sql plugin to retrieve the sql from a separate file to populate a
+        table with 11000 entries.</p>
+        
+        <p>After completing this table creation this page will display the time
+        it took for your computer and browser to complete this task, which should
+        be no more than just a few seconds. Note, the time taken to download the sql
+        file from the server is not taken into account so your actual wait may be
+        a little longer than the results displayed.</p>
+
+        <div id="startTest">START TEST</div>
+
+        <div id="demoRunning"><img src="images/demo-running.gif" /></div>
+    
+        <div id="results">Run the test to see how your computer does.</div>
+        
+        <p>After running this test, and if you have a browser with a built in
+        client side database viewer like Google Chrome you can view the example
+        table through that interface.
+        
+        <p>The javascript code utilized to make this happen is as follows:</p>
+
+        <pre><code class="javascript">
+$(function(){
+    var demoRunning = false;
+    
+    $("#startTest").click(function(){
+        if(!demoRunning){
+            $(this).addClass("running");
+            $("#demoRunning").show();
+            $("#results").text("running...");
+            demoRunning = true;
+            try {
+                html5sql.openDatabase("demo", "Demo Database", 5*1024*1024);
+           
+                $.get('demo-statements.sql',function(sql){
+                    var startTime = new Date();
+                    html5sql.process(
+                        sql,
+                        function(){ //Success
+                            var endTime = new Date();
+                            $("#results").text("Table with 11000 entries created in: " +
+                                                ((endTime - startTime) / 1000) + "s");
+                            $("#startTest").removeClass("running");
+                            $("#demoRunning").hide();
+                            demoRunning = false;
+                        },
+                        function(error, failingQuery){ //Failure
+                            $("#results").text("Error: " + error.message);
+                            $("#startTest").removeClass("running");
+                            $("#demoRunning").hide();
+                            demoRunning = false;
+                        }
+                    );
+                });
+            
+            } catch (error) {
+                $("#results").text("Error: " + error.message);
+                $("#startTest").removeClass("running");
+                $("#demoRunning").hide();
+                demoRunning = false;
+            }
+        }
+    })
+});
+        </code></pre>
+        
+        <p>As you can see, with html5sql.js and it doesn't take much to
+        process a large number of sql statements in sequence.</p>
+    </div>
+<script src="http://yandex.st/highlightjs/6.0/highlight.min.js"></script>
+</body>
+</html>

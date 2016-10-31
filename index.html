@@ -1,75 +1,193 @@
 <!DOCTYPE html>
+
 <html>
 <head>
-  <meta charset='utf-8'>
-
-  <title>KenCorbettJr/html5sql @ GitHub</title>
-
-  <style type="text/css">
-    body {
-      margin-top: 1.0em;
-      background-color: #190160;
-      font-family: "Helvetica,Arial,FreeSans";
-      color: #ffffff;
-    }
-    #container {
-      margin: 0 auto;
-      width: 700px;
-    }
-    h1 { font-size: 3.8em; color: #e6fe9f; margin-bottom: 3px; }
-    h1 .small { font-size: 0.4em; }
-    h1 a { text-decoration: none }
-    h2 { font-size: 1.5em; color: #e6fe9f; }
-    h3 { text-align: center; color: #e6fe9f; }
-    a { color: #e6fe9f; }
-    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
-    .download { float: right; }
-    pre { background: #000; color: #fff; padding: 15px;}
-    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
-    .footer { text-align:center; padding-top:30px; font-style: italic; }
-  </style>
+    <title>html5sql.js Home Page</title>
+    
+    <!--blueprint css-->
+    <link rel="stylesheet" href="blueprint/screen.css" type="text/css"  
+        media="screen, projection" /> 
+    <link rel="stylesheet" href="blueprint/print.css" type="text/css"  
+        media="print" /> 
+    <!--[if lt IE 8]> 
+    <link rel="stylesheet" href="blueprint/ie.css" type="text/css" 
+        media="screen, projection" /> 
+    <![endif]-->
+    
+    <link href='http://fonts.googleapis.com/css?family=Coda:800' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Podkova' rel='stylesheet' type='text/css'>
+    
+    
+    <link rel="stylesheet" href="css/sunburst.css">
+    <script src="js/modernizr.js"></script>
+    <script src="js/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+    <link href='css/styles.css' rel='stylesheet' type='text/css'>
+	
+    <script type="text/javascript">
+	// Google Docs Snippet
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-12212631-2']);
+	_gaq.push(['_setDomainName', '.html5sql.com']);
+	_gaq.push(['_trackPageview']);
+      
+	(function() {
+	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+      
+    </script>
 </head>
 
 <body>
-  <a href="http://github.com/KenCorbettJr/html5sql"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
-
-  <div id="container">
-
-    <div class="download">
-      <a href="http://github.com/KenCorbettJr/html5sql/zipball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a>
-      <a href="http://github.com/KenCorbettJr/html5sql/tarball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
+    <div id="header">
+	<h1><img id="storageIcon" src="images/HTML5_Offline_Storage.png"/>HTML5SQL.JS</h1>
+	<h5><em>Makes using SQL on the client side is easy!</em></h5>
     </div>
-
-    <h1><a href="http://github.com/KenCorbettJr/html5sql">html5sql</a>
-      <span class="small">by <a href="http://github.com/KenCorbettJr">KenCorbettJr</a></span></h1>
-
-    <div class="description">
-      A helper class for creating and working with client side relational databases.
+    <div class="container">
+        <div class="span-24">
+            <h2>
+                <a href="#">Home</a>|
+                <a href="demo.html">Demo</a>|
+                <a href="js/html5sql.js">Download</a>|
+                <a href="guide.html">Guide</a>
+            </h2>
+        </div>
     </div>
+    <div class="container"> 
+        <div class="span-24">
 
-    <h2>Contact</h2>
-<p> Kenneth.Corbett@gmail.com<br/>      </p>
-
-
-    <h2>Download</h2>
+    <h3>Overview</h3>
     <p>
-      You can download this project in either
-      <a href="http://github.com/KenCorbettJr/html5sql/zipball/master">zip</a> or
-      <a href="http://github.com/KenCorbettJr/html5sql/tarball/master">tar</a> formats.
-    </p>
-    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
-      by running:
-      <pre>$ git clone git://github.com/KenCorbettJr/html5sql</pre>
+        html5sql is a light JavaScript module that makes working with the HTML5
+        Web Database a whole lot easier.  Its primary function is to provides a
+        structure for the <strong>SEQUENTIAL</strong> processing of SQL
+        statements within a single transaction.  This alone greatly simplifies
+        the interaction with the database however it doesn't stop there.  Many
+        other smaller features have been included to make things easier, more
+        natural and more convenient for the programmer.
     </p>
 
-    <div class="footer">
-      get the source code on GitHub : <a href="http://github.com/KenCorbettJr/html5sql">KenCorbettJr/html5sql</a>
+    <h3>Core Features</h3>
+
+    <ol>
+        <li>
+            Provide the capability to sequentially process SQL in many
+            different forms:
+            <ul>
+                <li>As a single SQL statement string.</li>
+                <li>As an array of SQL statement strings.</li>
+                <li>As an array of SQL statement objects (if you want to inject data into the SQL or get a callback after each SQL statement is processed)</li>
+                <li>As a string containing multiple SQL statements, each of
+                which ends in a semicolon.</li>
+<li>From a completely <strong>separate file</strong> containing SQL statements.</li>
+</ul>
+</li>
+<li><p>Provide a framework for controlling the version of a database.</p></li>
+</ol><h3>Example</h3>
+
+<p>If you have tried using an HTML5 web database you know how
+complex it can be.  Especially when you are setting it up your
+tables in the beginning.  Well you will be happy to know this
+is no more.</p>
+
+<p>To show you what I mean and illustrate the power of this
+module, take a look at this example:</p>
+
+<p>Say you want to set up a table and insert a bunch of rows
+into this table. If you are using html5sql you would just
+put all the statements necessary to create your table into
+a separate file, which for this example we will name
+<code>Setup-Tables.SQL</code>.  This file would probably look something
+like this:</p>
+
+<pre><code>CREATE TABLE example (id INTEGER PRIMARY KEY, data TEXT);
+INSERT INTO example (data) VALUES ('First');
+INSERT INTO example (data) VALUES ('Second');
+INSERT INTO example (data) VALUES ('Third');
+
+CREATE TABLE example2 (id INTEGER PRIMARY KEY, data TEXT);
+INSERT INTO example2 (data) VALUES ('First');
+INSERT INTO example2 (data) VALUES ('Second');
+INSERT INTO example2 (data) VALUES ('Third');
+</code></pre>
+
+<p>With <em>html5sql</em>, to sequentially call these SQL statements and
+create your table(s) all you would need to do is open your
+database and then add a snippet of code like this:</p>
+
+<pre><code>$.get('Setup-Tables.SQL',function(sqlStatements){
+    html5sql.process(
+        //This is the text data from the SQL file you retrieved
+        sqlStatements,
+        function(){
+            // After all statements are processed this function
+            //   will be called.
+        },
+        function(error){
+            // Handle any errors here
+        }
+    );
+});
+</code></pre>
+
+<p>With the the jQuery get function your list of SQL statements
+is retrieved from your separate file, split into individual
+statements and processed sequentially in the order they appear.</p>
+
+<p>While this is just a simple example it illustrates how much
+easier this module can make using an html5sql database.</p>
+
+<h3>Performance</h3>
+
+<p>While all this sounds great, you may be wondering if
+performance suffers when SQL statements are processed
+sequentially.  The answer, as far as I can tell, is not that
+much.</p>
+
+<p>For example, html5sql was able to create a table and sequentially
+insert <strong>10,000 records</strong> into that table varying amounts of time
+but averaging somewhere <strong>between 2 and 6 seconds</strong> using the
+Google Chrome browser on my desktop.  This test leads me to
+believe large data sets should be handled by <em>html5sql</em>
+quite well.</p>
+
+<h3>Rational</h3>
+
+<p>At its very core, SQL is designed to be a sequentially
+processed language.  Certain statements must be processed before
+other statements.  For example, a table must be created before
+data is inserted into it.  Conversely, JavaScript is a very
+asynchronous, event driven language.  This asynchronous nature
+is very present in the HTML5 client side database spec and
+introduces a high degree of complexity for the programmer.
+It is for this reason that this module was written.</p>
+
+<p>This library was written with the understanding that the W3C
+has ceased to maintain the spec for the Web SQL Database.  Even
+though they have withdrawn from the spec, because webkit has
+incorporated it the number if internet users with a compatible
+browser is still significant, expecially on mobile devices.</p>
+
+<p>While this module decreases the complexity of using an HTML5
+SQL database, it does not attempt to simplify the SQL itself.
+This is intentional.  SQL is a powerful language and attempts
+to simplify it seem to only decrease it power and utility. In
+my experience, a better option is to just learn SQL better
+so it becomes more natural. An excellent resource for learning
+SQL is the <a href="http://sqlite.org/lang.html" title="SQLite Syntax Guide">SQLite website</a>.</p>
+
+</ol><h3>Goals for the future</h3>
+
+<p>I would like to continue to expand this library and incorporate
+more ideas to help programmers use HTML5 web databases.
+Eventually I would love to see this library used by everyone
+who wishes to utilize the HTML5 Web Database.</p></div></div>
+  </div> 
+       </div>
     </div>
-
-  </div>
-
-  
+<script src="http://yandex.st/highlightjs/6.0/highlight.min.js"></script>
 </body>
 </html>

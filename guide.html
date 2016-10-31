@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>html5sql.js Home Page</title>
+    
+    <!--blueprint css-->
+    <link rel="stylesheet" href="blueprint/screen.css" type="text/css"  
+        media="screen, projection" /> 
+    <link rel="stylesheet" href="blueprint/print.css" type="text/css"  
+        media="print" /> 
+    <!--[if lt IE 8]> 
+    <link rel="stylesheet" href="blueprint/ie.css" type="text/css" 
+        media="screen, projection" /> 
+    <![endif]-->
+    
+    <link href='http://fonts.googleapis.com/css?family=Coda:800' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Podkova' rel='stylesheet' type='text/css'>
+    
+    
+    <link rel="stylesheet" href="css/sunburst.css">
+    <script src="js/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+    <link href='css/styles.css' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+    <div id="header">
+	<h1><img id="storageIcon" src="images/HTML5_Offline_Storage.png"/>HTML5SQL.JS</h1>
+	<h5><em>Makes using SQL on the client side is easy!</em></h5>
+    </div>
+    <div class="container">
+        <div class="span-24">
+            <h2>
+                <a href="index.html">Home</a>|
+                <a href="demo.html">Demo</a>|
+                <a href="js/html5sql.js">Download</a>|
+                <a href="#">Guide</a>
+            </h2>
+        </div>
+    </div>
+    <div class="container"> 
+        <div class="span-24">
+
+<h3>General Guide for Using</h3>
+
+<p>There are 3 general functions built into the html5sql module.</p>
+
+
+<h4><code>html5sql.openDatabase(databaseName, displayName, estimatedSize)</code></h4>
+
+<p> The <code>html5sql.openDatabase()</code> is a light wrapper for the native
+ <code>openDatabase</code> function.  It open's a connection to your
+ database and saves a reference to that connection for you.
+ It needs to be called before you can process any SQL statements.</p>
+
+<p> This function has 3 arguments.</p>
+
+<ul>
+<li>
+<strong>databaseName</strong> - This is a name for your database.
+  Usually it would be something like = com.yourcompany.yourapp.db
+  but it really can be anything you like.</li>
+<li>
+<strong>displayName</strong> - This is the display name for your
+  database.  A typical example would be "This App Database"</li>
+<li>
+<strong>estimatedSize</strong> - This is the estimated size of your
+  database.  You want to allow for plenty of space for your
+  needs.  A common technique is to use some simple multiplication.
+  So for 5 Megabits you could just put 5<em>1024</em>1024.</li>
+</ul>
+<p> If you are familiar with the native openDatabase function
+ you may notice that version is missing.  Database versions
+ are powerful things when you need to change the structure
+ of your database tables, but using this functionality is
+ implemented within the changeVersion function of <em>html5sql</em>.
+ For right now we just open a generic connection to the
+ database.</p>
+
+<p> So an example could be something like this:</p>
+
+<pre><code class="javascript"> html5sql.openDatabase(
+     "com.mycompany.appdb",
+     "The App Database"
+     3*1024*1024);
+</code></pre>
+<h4><code>html5sql.process(SQL, finalSuccessCallback, errorCallback)</code></h4>
+
+<p> The <code>html5sql.process()</code> function is the workhorse of the
+ functions.  Once you have opened your database you can
+ pass this function SQL and it will make sure that SQL is
+ executed in a sequential manner.</p>
+
+<p> The first argument which is passed to <code>html5sql.process()</code>
+ is SQL.  It can accept SQL statements in many forms:</p>
+
+<ol>
+<li>
+<p><strong>String</strong> - You can pass the process function a single
+SQL statement in a string like this:</p>
+
+<pre><code class="javascript">"SELECT * FROM table;"
+</code></pre>
+
+<p>or a bunch of SQL statements in a single string, as long
+as each of them ends in a semicolon like this:</p>
+
+<pre><code class="javascript">"CREATE table (id INTEGER PRIMARY KEY, data TEXT);" +
+"INSERT INTO table (data) VALUES ('One');" + 
+"INSERT INTO table (data) VALUES ('Two');" + 
+"INSERT INTO table (data) VALUES ('Three');" + 
+"INSERT INTO table (data) VALUES ('Four');" + 
+"INSERT INTO table (data) VALUES ('Five');" 
+</code></pre>
+</li>
+<li><p><strong>Text from Separate File</strong> - In much the same way
+<code>html5sql.process()</code> can handle strings with multiple
+SQL statements, it can handle and process text data
+retrieved from an separate file.  An example of this
+is shown above.</p></li>
+<li>
+<p><strong>Array of SQL Statement Strings</strong> - You can pass the
+ process function an array of SQL statement strings like
+ this:</p>
+
+<pre><code class="javascript"> [
+     "CREATE table (id INTEGER PRIMARY KEY, data TEXT);",
+     "INSERT INTO table (data) VALUES ('One');", 
+     "INSERT INTO table (data) VALUES ('Two');", 
+     "INSERT INTO table (data) VALUES ('Three');", 
+     "INSERT INTO table (data) VALUES ('Four');", 
+     "INSERT INTO table (data) VALUES ('Five');"
+ ]
+</code></pre>
+</li>
+<li>
+<p><strong>Array of SQL Statement Objects</strong> - The most functional
+ method of providing SQL is by using the SQL Statement
+ Objects in an array. The structure of the SQL Statement
+ object is basically the same as the arguments you
+ pass to the native <code>executeSQL</code> function and has three
+ parts:</p>
+
+<ul>
+<li>SQL <code>"String"</code> - A string containing a single SQL
+statement.  This string can optionally include <code>?</code> in
+place of data.</li>
+<li>data <code>[Array]</code> - An array of data which will be
+sequentially inserted into the SQL statement to replace
+the <code>?</code> characters.  The number of <code>?</code> characters and
+elements in this data array must match.</li>
+<li>success <code>(function)</code> - A function which will be
+called upon successful execution of the SQL statement.
+It has access to the results of the SQL statement.
+Additionally, if this function returns an array, it will
+be used as the data parameter for the next SQL statement
+to be processed.  This allows you to use the results
+of one SQL statement as data for the following SQL
+statements as is commonly needed for foreign keys.</li>
+</ul>
+<p> Probably the easiest way to define and use this object
+ is by defining an object literal.  So a general template
+ for this SQL Statement Object would be something like
+ this:
+<pre><code class="javascript">{
+   "sql": "",
+   "data": [],
+   "success": function(transaction, results){
+	//Code to be processed when sql statement has been processed
+   }
+}</code></pre>
+
+<p> So a simple example of the SQL parameter when using
+ using SQL Statement Objects could be:</p>
+
+<pre><code class="javascript"> [
+   {
+     "sql": "INSERT INTO contacts (name, phone) VALUES (?, ?)",
+     "data": ["Joe Bob", "555-555-5555"],
+     "success": function(transaction, results){
+         //Just Added Bob to contacts table   
+     },  
+   },
+   {
+     "sql": "INSERT INTO contacts (name, phone) VALUES (?, ?)",
+     "data": ["Mary Bob", "555-555-5555"],
+     "success": function(){
+         //Just Added Mary to contacts table
+     },
+   }
+ ]
+</code></pre>
+
+<p> The only argument of the native <code>executeSQL</code> function
+ that isn't part of the SQL Statement Object is the error
+ callback function.  This is because there is a general
+ error callback that is defined for the entire transaction
+ rather than for the individual statements.  This
+ general error callback is the third argument passed to
+ the <code>html5sql.process()</code> function.</p>
+</li>
+</ol>
+<p> So in total <code>html5sql.process()</code> has 3 arguments:</p>
+
+<ul>
+<li> <strong>SQL</strong> - In whichever way you choose to provide it.</li>
+<li> <strong>finalSuccessCallback</strong> - A final success callback
+ after your all of your statements have been processed.</li>
+<li> <strong>errorCallback</strong> - A general error callback function
+ to be called if there are any errors in any part of
+ this process.  Encountering an error rolls back the
+ entire transaction, so the version of the database is
+ not changed.</li>
+</ul>
+<p> Putting this all together.  An example usage of <code>html5.process()</code>
+ could be:</p>
+
+<pre><code class="javascript"> html5sql.process(
+     [
+         "DROP TABLE table1",
+         "DROP TABLE table2",
+         "DROP TABLE table3",
+         "DROP TABLE table4"
+     ],
+     function(){
+         console.log("Success Dropping Tables");
+     },
+     function(error, statement){
+         console.error("Error: " + error.message + " when processing " + statement);
+     }        
+ );
+</code></pre>
+
+<h4><code>html5sql.changeVersion("oldVersion","newVersion",SQL,successCallback,errorCallback)</code></h4>
+
+<p> The <code>html5sql.changeVersion()</code> function is what you should
+ use to set up your database and handle version and
+ migrations.  This function works by testing if the
+ database's version matches the oldVersion parameter you
+ provide.  If it does this function will process the SQL
+ and change the database's version to the newVersion
+ value you specify.</p>
+
+<ul>
+<li> <strong>oldVersion</strong> - The version of the database you are
+ looking to change.  If you haven't changed the version
+ of your database yet it will be the value <code>""</code>.</li>
+<li> <strong>newVersion</strong> - The version of the database you would
+ like to change to.</li>
+<li> <strong>SQL</strong> - All the SQL statements necessary to update your database
+ schema and migrate your data.  You have many options
+ on how you could provide the SQL statements.  See the
+ above <code>html5sql.process()</code> function description for more
+ detail.</li>
+<li> <strong>finalSuccessCallback</strong> - A final success callback
+ after your database's version has been updated.</li>
+<li> <strong>errorCallback</strong> - A general error callback function
+ to be called if there are any errors in any part of
+ this process.  Encountering an error rolls back the
+ entire transaction, so the version of the database is
+ not changed.</li>
+</ul>
+</div></div>
+  </div> 
+</div>
+<script src="http://yandex.st/highlightjs/6.0/highlight.min.js"></script>
+</body>
+</html>

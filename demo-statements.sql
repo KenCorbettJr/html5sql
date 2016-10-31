@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS speedtest;
 CREATE TABLE speedtest (id  INTEGER PRIMARY KEY, label TEXT);
 INSERT INTO speedtest (label) VALUES ('1');
 INSERT INTO speedtest (label) VALUES ('2');
@@ -10998,4 +10999,3 @@ INSERT INTO speedtest (label) VALUES ('Sixth');
 INSERT INTO speedtest (label) VALUES ('Seventh');
 INSERT INTO speedtest (label) VALUES ('Eighth');
 INSERT INTO speedtest (label) VALUES ('Ninth');
-DROP TABLE speedtest;
