@@ -3,10 +3,8 @@ $(document).ready(function(){
         html5sql.openDatabase("test", "Testing Database", 5*1024*1024);
     }
 
-
     html5sql.logInfo = true;
-    html5sql.logErrors = true;
-    
+
     test("Create a global html5sql variable is created using the modular pattern containing all functions.", function() {
         expect(4);
         ok(html5sql, "Global html5sql exists" );
@@ -14,21 +12,21 @@ $(document).ready(function(){
         ok(html5sql.process, "html5sql.process function exists");
         ok(html5sql.changeVersion, "html5sql.changeVersion function exists");
     });
-    
+
     test("OPEN DATABASE: When unexpected parameters are passed to the openDatabase function an error is returned", function(){
         raises(html5sql.openDatabase(123, 123, "string"), "An error is returned.")
-    });    
-    
+    });
+
     test("OPEN DATABASE: Successfully open the database and store it as html5sql.database", function() {
         html5sql.openDatabase("test", "Testing Database", 5*1024*1024);
         ok(html5sql.database, "Database was successfully created by calling html5sql.openDatabase with thie correct parameters");
     });
-    
+
     test("PROCESS: a single sql statement object.", 2, function() {
         stop();
         html5sql.process(
             {
-                "sql": "CREATE TABLE singleObjectTest (sequence INTEGER PRIMARY KEY, label TEXT);",
+                "sql": "CREATE TABLE IF NOT EXISTS singleObjectTest (sequence INTEGER PRIMARY KEY, label TEXT);",
                 "data": [],
                 "success": function(transaction, results){
                     ok(true, "Created sequence Testing Table")
@@ -107,7 +105,7 @@ $(document).ready(function(){
             }
         );
     });
-    
+
     test("PROCESS: ensure that an array returned by the success function of individual sql statement objects is used as the data for the next statement.", function(){
         stop();
         html5sql.process(
@@ -177,9 +175,9 @@ $(document).ready(function(){
             function(error, problemSQLStatement){
                 throw new Error("Error:"+error.message+" Processing SQL Statement "+problemSQLStatement);
             }
-        );  
+        );
     });
-    
+
     test("PROCESS: a set of sql statments in an array.", 1, function() {
         stop();
         html5sql.process(
@@ -199,7 +197,7 @@ $(document).ready(function(){
             }
         );
     });
-    
+
     test("PROCESS: a set of sql statments combined within a single string.", 1, function() {
         stop();
         html5sql.process(
@@ -291,7 +289,7 @@ $(document).ready(function(){
 
     test("PROCESS: a set of sql statments stored in a separate file",1,function(){
         stop();
-        
+
         $.get('test-statements.sql',function(sql){
             html5sql.process(
                 sql,
@@ -305,7 +303,7 @@ $(document).ready(function(){
             );
         });
     })
-    
+
     test("PROCESS: a set of 10000 sql statments stored in a separate file",1,function(){
         stop();
         var startTime = new Date(), endTime, seconds;
@@ -325,7 +323,7 @@ $(document).ready(function(){
             );
         })
     });
-    
+
     test("CHANGE VERSION: when passed a set of sql statments in an array.", 1, function() {
         stop();
         html5sql.changeVersion(html5sql.database.version,"1.0",
@@ -349,12 +347,12 @@ $(document).ready(function(){
     test("CHANGE VERSION: when passed a set of sql statments combined within a single string.", 1, function() {
         stop();
         html5sql.changeVersion("1.0","",
-            "CREATE TABLE Test8 (sequence  INTEGER PRIMARY KEY, label TEXT);"+
-            "INSERT INTO Test8 (label) VALUES ('First');"+
-            "INSERT INTO Test8 (label) VALUES ('Second');"+
-            "INSERT INTO Test8 (label) VALUES ('Third');"+
-            "INSERT INTO Test8 (label) VALUES ('Fourth');"+
-            "INSERT INTO Test8 (label) VALUES ('Fifth');"+
+            "CREATE TABLE Test8 (sequence  INTEGER PRIMARY KEY, label TEXT);" +
+            "INSERT INTO Test8 (label) VALUES ('First');" +
+            "INSERT INTO Test8 (label) VALUES ('Second');" +
+            "INSERT INTO Test8 (label) VALUES ('Third');" +
+            "INSERT INTO Test8 (label) VALUES ('Fourth');" +
+            "INSERT INTO Test8 (label) VALUES ('Fifth');" +
             "DROP TABLE Test8;",
             function(){
                 ok(true, "Final Callback Executed" );
