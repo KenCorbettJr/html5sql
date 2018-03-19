@@ -6,7 +6,7 @@ v0.9.7
 
 *Makes using SQL on the client side is easy!*
 
-Website: [html5sql.com](http://html5sql.com)
+[Website](http://kencorbettjr.github.io/html5sql/)
 
 ### Overview
 
